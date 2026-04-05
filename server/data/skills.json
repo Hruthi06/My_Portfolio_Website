@@ -1,1 +1,44 @@
-[]
+[
+  {
+    "id": 1,
+    "name": "Spring Boot",
+    "category": "Backend",
+    "level": 90,
+    "description": "Production-ready backend microservices with auto-configuration and embedded server."
+  },
+  {
+    "id": 2,
+    "name": "JWT Auth",
+    "category": "Security",
+    "level": 85,
+    "description": "Stateless, token-based authentication systems for secure API communication."
+  },
+  {
+    "id": 3,
+    "name": "REST APIs",
+    "category": "Backend",
+    "level": 92,
+    "description": "Clean, well-structured API endpoints following RESTful conventions and best practices."
+  },
+  {
+    "id": 4,
+    "name": "MySQL",
+    "category": "Database",
+    "level": 88,
+    "description": "Relational database design, query optimization, and Spring Data JPA integration."
+  },
+  {
+    "id": 5,
+    "name": "HTML / CSS",
+    "category": "Frontend",
+    "level": 93,
+    "description": "Semantic markup, responsive layouts, animations, and pixel-perfect UI execution."
+  },
+  {
+    "id": 6,
+    "name": "JavaScript",
+    "category": "Frontend",
+    "level": 87,
+    "description": "Vanilla JS, async programming, DOM manipulation, and modern ES6+ features."
+  }
+]

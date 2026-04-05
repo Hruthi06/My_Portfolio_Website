@@ -1,1 +1,26 @@
-[]
+[
+  {
+    "id": 1,
+    "title": "Java Programming Certificate",
+    "issuer": "HackerRank",
+    "date": "2024",
+    "url": "#",
+    "badge": "☕"
+  },
+  {
+    "id": 2,
+    "title": "SQL (Advanced) Certificate",
+    "issuer": "HackerRank",
+    "date": "2024",
+    "url": "#",
+    "badge": "🗄️"
+  },
+  {
+    "id": 3,
+    "title": "REST API Certificate",
+    "issuer": "HackerRank",
+    "date": "2024",
+    "url": "#",
+    "badge": "🔌"
+  }
+]

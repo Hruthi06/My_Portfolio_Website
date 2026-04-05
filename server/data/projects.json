@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "id": 1,
+    "title": "Secure Auth System",
+    "description": "A full-stack authentication system with JWT tokens, refresh token rotation, role-based access control (ADMIN / USER), and Spring Security integration. Includes login, registration, and protected route handling.",
+    "icon": "🔐",
+    "tags": ["Spring Boot", "JWT", "MySQL", "Spring Security"],
+    "githubUrl": "#",
+    "liveUrl": "#",
+    "featured": true
+  },
+  {
+    "id": 2,
+    "title": "REST API Dashboard",
+    "description": "A feature-rich REST API with CRUD operations, pagination, filtering, and a responsive frontend dashboard for real-time data management. Built with clean layered architecture (Controller → Service → Repository).",
+    "icon": "📊",
+    "tags": ["Spring Boot", "REST API", "MySQL", "JavaScript"],
+    "githubUrl": "#",
+    "liveUrl": "#",
+    "featured": false
+  },
+  {
+    "id": 3,
+    "title": "Quiz Application",
+    "description": "A dynamic quiz platform with category-based questions, timed sessions, randomized 10-question delivery, instant visual feedback, and detailed score analytics. Deployed on Render with FastAPI backend and React frontend.",
+    "icon": "🧠",
+    "tags": ["FastAPI", "React", "Python", "Render"],
+    "githubUrl": "#",
+    "liveUrl": "#",
+    "featured": false
+  },
+  {
+    "id": 4,
+    "title": "Employee Management System",
+    "description": "A comprehensive HR management system built with Spring Boot enabling full CRUD operations on employee records, department management, and report generation with a clean responsive UI.",
+    "icon": "👥",
+    "tags": ["Spring Boot", "MySQL", "HTML/CSS", "JavaScript"],
+    "githubUrl": "#",
+    "liveUrl": "#",
+    "featured": false
+  }
+]
