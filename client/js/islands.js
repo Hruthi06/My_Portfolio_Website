@@ -4,31 +4,30 @@ export async function loadIslands(scene) {
     const islands = [];
 
     const configuration = [
-        { name: 'Home Island', type: 'home', color: 0x4facfe, pos: { x: 0, y: 0, z: 0 } },
-        { name: 'Advanced Skills', type: 'skills', color: 0x00f2fe, pos: { angle: 0 } },
-        { name: 'Projects Island', type: 'projects', color: 0x00f2fe, pos: { angle: 1 } },
-        { name: 'Resume Island', type: 'resume', color: 0x00f2fe, pos: { angle: 2 } },
-        { name: 'Education Island', type: 'education', color: 0x00f2fe, pos: { angle: 3 } },
-        { name: 'Certification Island', type: 'certification', color: 0x00f2fe, pos: { angle: 4 } },
-        { name: 'Contact Island', type: 'home', color: 0x00f2fe, pos: { angle: 5 } } // Reuse home for contact
+        { name: 'Home Island', type: 'home', pos: { x: 0, y: 0, z: 0 } },
+        { name: 'Advanced Skills', type: 'skills', pos: { angle: 0 } },
+        { name: 'Projects Island', type: 'projects', pos: { angle: 1 } },
+        { name: 'Resume Island', type: 'resume', pos: { angle: 2 } },
+        { name: 'Education Island', type: 'education', pos: { angle: 3 } },
+        { name: 'Certification Island', type: 'certification', pos: { angle: 4 } },
+        { name: 'Contact Island', type: 'home', pos: { angle: 5 } }
     ];
 
-    const radius = 40; // Larger radius for larger islands
+    const radius = 60; 
 
-    configuration.forEach((config, i) => {
+    configuration.forEach((config) => {
         const island = createIsland(config.type);
         island.name = config.name;
 
         if (config.pos.x !== undefined) {
-            island.position.set(config.pos.x, config.pos.y, config.pos.z);
+            island.position.set(config.pos.x, config.pos.y || 0, config.pos.z);
         } else {
             const angle = (config.pos.angle / 6) * Math.PI * 2;
             island.position.x = Math.cos(angle) * radius;
             island.position.z = Math.sin(angle) * radius;
-            island.position.y = Math.random() * 5 - 2.5;
+            island.position.y = Math.random() * 10 - 5;
         }
 
-        // Preserve metadata for animation and interaction
         island.userData = {
             name: config.name,
             initialY: island.position.y,
@@ -42,155 +41,245 @@ export async function loadIslands(scene) {
     return islands;
 }
 
-export function createIsland(structureType = "home") {
-    const island = new THREE.Group();
-
-    // Bottom - Rocky/Conical
-    const bottomGeo = new THREE.ConeGeometry(10, 12, 6);
-    const bottomMat = new THREE.MeshStandardMaterial({ color: 0x4a4a4a, flatShading: true });
-    const bottom = new THREE.Mesh(bottomGeo, bottomMat);
-    bottom.rotation.x = Math.PI;
-    bottom.position.y = -5;
-    island.add(bottom);
-
-    // Hanging Roots / Stones
-    for (let i = 0; i < 8; i++) {
-        const rootGeo = new THREE.CylinderGeometry(0.2, 0.05, Math.random() * 8 + 4, 4);
-        const rootMat = new THREE.MeshStandardMaterial({ color: 0x3e2723 });
-        const root = new THREE.Mesh(rootGeo, rootMat);
-        const angle = Math.random() * Math.PI * 2;
-        const r = Math.random() * 6;
-        root.position.set(Math.cos(angle) * r, -10 - Math.random() * 2, Math.sin(angle) * r);
-        root.rotation.z = (Math.random() - 0.5) * 0.5;
-        island.add(root);
-    }
-
-    /* GRASS TOP */
-    const grassGeo = new THREE.CylinderGeometry(10, 10, 2, 8);
-    const grassMat = new THREE.MeshStandardMaterial({
-        color: 0x4CAF50
-    });
-
-    const grass = new THREE.Mesh(grassGeo, grassMat);
-    grass.position.y = 1;
-    island.add(grass);
-
-    /* ADD STRUCTURE */
-    const structure = createStructure(structureType);
-    island.add(structure);
-
-    return island;
+// --- HELPER: NOISE ---
+function noise(x, y, z) {
+    return Math.sin(x * 1.5) * Math.cos(y * 1.1) + Math.sin(z * 0.8) * 0.5 + Math.sin((x+y+z)*2.5) * 0.2;
 }
 
-function createStructure(type) {
+// --- PROCEDURAL TEXTURE HELPERS ---
+function createNoiseTexture(color1, color2, scale = 1, isRock = false) {
+    const size = 1024;
+    const canvas = document.createElement('canvas');
+    canvas.width = size;
+    canvas.height = size;
+    const ctx = canvas.getContext('2d');
+    
+    ctx.fillStyle = color1;
+    ctx.fillRect(0, 0, size, size);
+    
+    for (let i = 0; i < 8000; i++) {
+        const x = Math.random() * size;
+        const y = Math.random() * size;
+        const w = (Math.random() * 30 + 10) * scale;
+        const h = (Math.random() * 10 + 5) * scale;
+        ctx.fillStyle = color2;
+        ctx.globalAlpha = isRock ? 0.05 : 0.1;
+        ctx.fillRect(x, y, w, h);
+    }
+    
+    const texture = new THREE.CanvasTexture(canvas);
+    texture.wrapS = THREE.RepeatWrapping;
+    texture.wrapT = THREE.RepeatWrapping;
+    return texture;
+}
+
+const rockTexture = createNoiseTexture('#606060', '#303030', 2, true);
+const woodTexture = createNoiseTexture('#5d4037', '#3e2723', 4);
+
+// --- MATERIALS ---
+const matRock = new THREE.MeshStandardMaterial({ 
+    map: rockTexture,
+    roughness: 1.0,
+    metalness: 0.1,
+    flatShading: true
+});
+
+const matWood = new THREE.MeshStandardMaterial({ 
+    map: woodTexture,
+    roughness: 0.8,
+    metalness: 0.0
+});
+
+const matRoof = new THREE.MeshStandardMaterial({ 
+    color: 0x1a2327, 
+    roughness: 0.3, 
+    metalness: 0.2 
+});
+
+const matWindow = new THREE.MeshStandardMaterial({
+    color: 0xffcc33,
+    emissive: 0xffaa00,
+    emissiveIntensity: 2.0
+});
+
+const matWater = new THREE.MeshStandardMaterial({ 
+    color: 0x80deea, 
+    transparent: true, 
+    opacity: 0.4, 
+    emissive: 0x00bcd4,
+    emissiveIntensity: 0.6
+});
+
+function createIsland(type) {
+    const group = new THREE.Group();
+
+    // 1. TERRAIN: Craggy Rock (V-Shape from reference)
+    const rockGeo = new THREE.IcosahedronGeometry(12, 10);
+    const pos = rockGeo.attributes.position;
+    const vec = new THREE.Vector3();
+
+    for (let i = 0; i < pos.count; i++) {
+        vec.fromBufferAttribute(pos, i);
+        
+        let n = noise(vec.x * 0.2, vec.y * 0.2, vec.z * 0.2) * 2;
+        n += noise(vec.x * 0.5, vec.y * 0.5, vec.z * 0.5) * 1;
+        
+        // V-Shape: Taper bottom
+        if (vec.y < 0) {
+            const taper = 1.0 + (vec.y / 12); // Tapers to 0 at y=-12
+            vec.x *= Math.max(0.1, taper);
+            vec.z *= Math.max(0.1, taper);
+            n *= 2; // More crags at bottom
+        } else {
+            // Flatten top for grass
+            vec.y *= 0.8;
+            n *= 0.5;
+        }
+
+        vec.addScaledVector(vec.clone().normalize(), n);
+        pos.setXYZ(i, vec.x, vec.y, vec.z);
+    }
+    rockGeo.computeVertexNormals();
+    const rock = new THREE.Mesh(rockGeo, matRock);
+    rock.castShadow = true;
+    rock.receiveShadow = true;
+    group.add(rock);
+
+    // 2. GRASS LAYER
+    const grassGeo = new THREE.CircleGeometry(11, 32);
+    const grassMat = new THREE.MeshStandardMaterial({ color: 0x7cb342, roughness: 1.0 });
+    const grass = new THREE.Mesh(grassGeo, grassMat);
+    grass.rotation.x = -Math.PI / 2;
+    grass.position.y = 1.5;
+    grass.receiveShadow = true;
+    group.add(grass);
+
+    // 3. STRUCTURES
+    const structure = createDetailedStructure(type);
+    structure.position.y = 1.6;
+    group.add(structure);
+
+    return group;
+}
+
+function createDetailedStructure(type) {
     const group = new THREE.Group();
 
     switch (type) {
         case "home": {
-            // Magical Tree Trunk
-            const trunkGeo = new THREE.CylinderGeometry(0.8, 1.2, 12, 8);
-            const trunkMat = new THREE.MeshStandardMaterial({ color: 0x4e342e });
-            const trunk = new THREE.Mesh(trunkGeo, trunkMat);
-            trunk.position.y = 6;
-            group.add(trunk);
+            // LARGE CENTRAL TREE
+            const tree = createBranchingTree();
+            tree.position.set(0, 0, 0);
+            group.add(tree);
 
-            // Tree Foliage (Canopy)
-            const canopyGeo = new THREE.SphereGeometry(6, 8, 8);
-            const canopyMat = new THREE.MeshStandardMaterial({ color: 0x2e7d32, transparent: true, opacity: 0.9 });
-            const canopy = new THREE.Mesh(canopyGeo, canopyMat);
-            canopy.position.y = 12;
-            group.add(canopy);
+            // PAGODAS
+            const mainPagoda = createAdvancedPagoda(1.5);
+            mainPagoda.position.set(0, 0, 6);
+            group.add(mainPagoda);
 
-            // Treehouse around trunk
-            const hGeo = new THREE.CylinderGeometry(3, 3, 3, 8);
-            const hMat = new THREE.MeshStandardMaterial({ color: 0x795548 });
-            const h = new THREE.Mesh(hGeo, hMat);
-            h.position.y = 5;
-            group.add(h);
+            const sidePagoda = createAdvancedPagoda(1.0);
+            sidePagoda.position.set(-8, 0, -2);
+            group.add(sidePagoda);
 
-            // Circular Balcony
-            const balconyGeo = new THREE.TorusGeometry(3.5, 0.2, 8, 24);
-            const balconyMat = new THREE.MeshStandardMaterial({ color: 0x5d4037 });
-            const balcony = new THREE.Mesh(balconyGeo, balconyMat);
-            balcony.rotation.x = Math.PI / 2;
-            balcony.position.y = 4;
-            group.add(balcony);
+            // BRIDGE
+            const bridgeGeo = new THREE.BoxGeometry(8, 0.4, 1.5);
+            const bridge = new THREE.Mesh(bridgeGeo, matWood);
+            bridge.position.set(-4, 1, 2);
+            bridge.rotation.y = Math.PI / 4;
+            group.add(bridge);
 
-            // Pond (on the grass)
-            const pondGeo = new THREE.CircleGeometry(4, 32);
-            const pondMat = new THREE.MeshStandardMaterial({ color: 0x00bcd4, transparent: true, opacity: 0.8 });
-            const pond = new THREE.Mesh(pondGeo, pondMat);
-            pond.rotation.x = -Math.PI / 2;
-            pond.position.y = 1.01;
-            pond.position.x = 4; // Shift to edge
-            group.add(pond);
-
-            // Waterfall
-            const waterLines = new THREE.Group();
-            for (let i = 0; i < 5; i++) {
-                const waterGeo = new THREE.CylinderGeometry(0.2, 0.1, 15, 8);
-                const waterMat = new THREE.MeshStandardMaterial({ color: 0x80deea, transparent: true, opacity: 0.6 });
-                const water = new THREE.Mesh(waterGeo, waterMat);
-                water.position.set(7.5 + (Math.random() - 0.5), -6.5, (Math.random() - 0.5) * 2);
-                waterLines.add(water);
+            // WATERFALLS
+            for(let i=0; i<3; i++) {
+                const waterGroup = new THREE.Group();
+                const waterFall = new THREE.Mesh(new THREE.CylinderGeometry(1.5, 1.2, 20, 12, 1, true), matWater);
+                waterFall.position.set(10, -8, 0);
+                waterFall.rotation.y = (i * Math.PI * 2) / 3;
+                waterGroup.add(waterFall);
+                group.add(waterGroup);
             }
-            group.add(waterLines);
+
             break;
         }
-
-        case "projects": {
-            const labGeo = new THREE.BoxGeometry(6, 4, 6);
-            const labMat = new THREE.MeshStandardMaterial({ color: 0x607D8B });
-            const lab = new THREE.Mesh(labGeo, labMat);
-            lab.position.y = 3;
-            group.add(lab);
-            break;
-        }
-
-        case "skills": {
-            const skillGeo = new THREE.CylinderGeometry(1.5, 2.5, 10, 8);
-            const skillMat = new THREE.MeshStandardMaterial({ color: 0x00BCD4 });
-            const skillTower = new THREE.Mesh(skillGeo, skillMat);
-            skillTower.position.y = 6;
-            group.add(skillTower);
-            break;
-        }
-
-        case "education": {
-            const houseGeo = new THREE.BoxGeometry(5, 3, 5);
-            const houseMat = new THREE.MeshStandardMaterial({ color: 0xffb74d });
-            const house = new THREE.Mesh(houseGeo, houseMat);
-            house.position.y = 2.5;
-            group.add(house);
-            break;
-        }
-
-        case "certification": {
-            const templeGeo = new THREE.CylinderGeometry(3, 4, 6, 6);
-            const templeMat = new THREE.MeshStandardMaterial({ color: 0xffd700 });
-            const temple = new THREE.Mesh(templeGeo, templeMat);
-            temple.position.y = 4;
-            group.add(temple);
-            break;
-        }
-
-        case "resume": {
-            const buildGeo = new THREE.BoxGeometry(3, 10, 3);
-            const buildMat = new THREE.MeshStandardMaterial({ color: 0x9c27b0 });
-            const building = new THREE.Mesh(buildGeo, buildMat);
-            building.position.y = 6;
-            group.add(building);
-            break;
+        
+        default: {
+            const cube = new THREE.Mesh(new THREE.BoxGeometry(4, 4, 4), new THREE.MeshStandardMaterial({color: 0x4fc3f7}));
+            cube.position.y = 2;
+            group.add(cube);
         }
     }
 
     return group;
 }
 
+function createAdvancedPagoda(scale) {
+    const p = new THREE.Group();
+    p.scale.set(scale, scale, scale);
+
+    // Base
+    const base = new THREE.Mesh(new THREE.BoxGeometry(4, 3, 4), matWood);
+    base.position.y = 1.5;
+    p.add(base);
+
+    // Windows
+    for(let i=0; i<4; i++) {
+        const win = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), matWindow);
+        if(i === 0) win.position.set(0, 1.5, 2.01);
+        if(i === 1) win.position.set(0, 1.5, -2.01);
+        if(i === 2) { win.position.set(2.01, 1.5, 0); win.rotation.y = Math.PI/2; }
+        if(i === 3) { win.position.set(-2.01, 1.5, 0); win.rotation.y = -Math.PI/2; }
+        p.add(win);
+    }
+
+    // Layered Roofs
+    for(let i=0; i<3; i++){
+        const roofGeo = new THREE.CylinderGeometry(0.1, 4 - i*0.8, 1.5, 4, 1);
+        const roof = new THREE.Mesh(roofGeo, matRoof);
+        roof.position.y = 3 + i * 1.5;
+        roof.rotation.y = Math.PI/4;
+        p.add(roof);
+    }
+
+    return p;
+}
+
+function createBranchingTree() {
+    const tree = new THREE.Group();
+    
+    // TRUNK
+    const trunkData = [
+        { r1: 1.5, r2: 1.2, h: 6, y: 3 },
+        { r1: 1.2, r2: 0.8, h: 6, y: 9, twist: 1 },
+        { r1: 0.8, r2: 0.4, h: 4, y: 14, twist: -1 }
+    ];
+
+    trunkData.forEach(d => {
+        const geo = new THREE.CylinderGeometry(d.r2, d.r1, d.h, 12);
+        const mesh = new THREE.Mesh(geo, matWood);
+        mesh.position.y = d.y;
+        if(d.twist) mesh.rotation.z = d.twist * 0.2;
+        tree.add(mesh);
+    });
+
+    // BRANCHES & LEAVES
+    const leafMat = new THREE.MeshStandardMaterial({ color: 0x558b2f, roughness: 1.0 });
+    for(let i=0; i<30; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const rad = 4 + Math.random() * 6;
+        const y = 14 + Math.random() * 8;
+        
+        const leafClump = new THREE.Mesh(new THREE.SphereGeometry(2 + Math.random()*2, 8, 8), leafMat);
+        leafClump.position.set(Math.cos(angle)*rad, y, Math.sin(angle)*rad);
+        leafClump.scale.y = 0.6;
+        tree.add(leafClump);
+    }
+
+    return tree;
+}
+
 export function animateIslands(islands, time) {
     islands.forEach(island => {
         const offset = island.userData.floatOffset;
-        island.position.y = island.userData.initialY + Math.sin(time * 0.001 + offset) * 1.5;
-        island.rotation.y += 0.002;
+        island.position.y = island.userData.initialY + Math.sin(time * 0.001 + offset) * 2;
+        island.rotation.y += 0.0005;
     });
 }
