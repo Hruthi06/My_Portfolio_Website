@@ -1,42 +1,62 @@
 [
   {
     "id": 1,
-    "title": "Secure Auth System",
-    "description": "A full-stack authentication system with JWT tokens, refresh token rotation, role-based access control (ADMIN / USER), and Spring Security integration. Includes login, registration, and protected route handling.",
-    "icon": "🔐",
-    "tags": ["Spring Boot", "JWT", "MySQL", "Spring Security"],
-    "githubUrl": "#",
-    "liveUrl": "#",
+    "title": "Where Is My Bus",
+    "description": "A real-time bus tracking application that allows users to track public transport locations live. Built with Flutter for a smooth cross-platform mobile experience.",
+    "icon": "🚌",
+    "tags": ["Flutter", "Dart", "Firebase", "Maps API"],
+    "githubUrl": "https://github.com/Hruthi06/where-is-my-bus",
+    "liveUrl": "https://github.com/Hruthi06/where-is-my-bus",
     "featured": true
   },
   {
     "id": 2,
-    "title": "REST API Dashboard",
-    "description": "A feature-rich REST API with CRUD operations, pagination, filtering, and a responsive frontend dashboard for real-time data management. Built with clean layered architecture (Controller → Service → Repository).",
-    "icon": "📊",
-    "tags": ["Spring Boot", "REST API", "MySQL", "JavaScript"],
-    "githubUrl": "#",
-    "liveUrl": "#",
-    "featured": false
+    "title": "Social Media Application",
+    "description": "A full-featured social platform featuring user authentication, post creation, and real-time interactions. Backend powered by Spring Boot with a robust TypeScript frontend.",
+    "icon": "📱",
+    "tags": ["Spring Boot", "Java", "TypeScript", "MySQL"],
+    "githubUrl": "https://github.com/Hruthi06/Socialmedia_Application",
+    "liveUrl": "https://github.com/Hruthi06/Socialmedia_Application",
+    "featured": true
   },
   {
     "id": 3,
     "title": "Quiz Application",
-    "description": "A dynamic quiz platform with category-based questions, timed sessions, randomized 10-question delivery, instant visual feedback, and detailed score analytics. Deployed on Render with FastAPI backend and React frontend.",
+    "description": "An interactive and engaging quiz platform with randomized questions, timed sessions, and detailed results analytics. Seamlessly deployed for reliable access.",
     "icon": "🧠",
-    "tags": ["FastAPI", "React", "Python", "Render"],
-    "githubUrl": "#",
-    "liveUrl": "#",
+    "tags": ["JavaScript", "HTML/CSS", "Vanilla JS"],
+    "githubUrl": "https://github.com/Hruthi06/Quiz_App",
+    "liveUrl": "https://github.com/Hruthi06/Quiz_App",
     "featured": false
   },
   {
     "id": 4,
-    "title": "Employee Management System",
-    "description": "A comprehensive HR management system built with Spring Boot enabling full CRUD operations on employee records, department management, and report generation with a clean responsive UI.",
-    "icon": "👥",
-    "tags": ["Spring Boot", "MySQL", "HTML/CSS", "JavaScript"],
-    "githubUrl": "#",
-    "liveUrl": "#",
+    "title": "FastAPI Social Media",
+    "description": "A high-performance backend service for social media platforms focusing on speed and scalability. Implements RESTful principles with Python's FastAPI.",
+    "icon": "⚡",
+    "tags": ["FastAPI", "Python", "PostgreSQL", "REST API"],
+    "githubUrl": "https://github.com/Hruthi06/fastapi-social-media",
+    "liveUrl": "https://github.com/Hruthi06/fastapi-social-media",
+    "featured": false
+  },
+  {
+    "id": 5,
+    "title": "React Website",
+    "description": "A modern, responsive website template showcasing best practices in component-based UI design and state management using the React framework.",
+    "icon": "⚛️",
+    "tags": ["React", "JavaScript", "Styled Components"],
+    "githubUrl": "https://github.com/Hruthi06/React-Website",
+    "liveUrl": "https://github.com/Hruthi06/React-Website",
+    "featured": false
+  },
+  {
+    "id": 6,
+    "title": "3D Portfolio Website",
+    "description": "This very portfolio! A premium, interactive 3D showcase built with Three.js to demonstrate technical skills with an immersive user experience.",
+    "icon": "🎨",
+    "tags": ["Three.js", "JavaScript", "GLSL", "Node.js"],
+    "githubUrl": "https://github.com/Hruthi06/My_Portfolio_Website",
+    "liveUrl": "https://github.com/Hruthi06/My_Portfolio_Website",
     "featured": false
   }
 ]

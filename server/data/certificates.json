@@ -1,26 +1,47 @@
 [
   {
     "id": 1,
-    "title": "Java Programming Certificate",
-    "issuer": "HackerRank",
-    "date": "2024",
-    "url": "#",
-    "badge": "☕"
+    "title": "Data Analytics Job Simulation",
+    "issuer": "Deloitte Australia",
+    "date": "2025",
+    "url": "https://www.theforage.com/simulations/deloitte-australia/data-analytics",
+    "badge": "📊",
+    "imageUrl": "assets/certificates/deloitte.png"
   },
   {
     "id": 2,
-    "title": "SQL (Advanced) Certificate",
-    "issuer": "HackerRank",
-    "date": "2024",
-    "url": "#",
-    "badge": "🗄️"
+    "title": "Cloud Foundations",
+    "issuer": "AWS Academy",
+    "date": "2025",
+    "url": "https://www.linkedin.com/in/hruthik-k-r-a32450294/details/certifications/",
+    "badge": "☁️",
+    "imageUrl": "assets/certificates/aws.png"
   },
   {
     "id": 3,
-    "title": "REST API Certificate",
-    "issuer": "HackerRank",
-    "date": "2024",
-    "url": "#",
-    "badge": "🔌"
+    "title": "Full Stack Dev with MERN",
+    "issuer": "Nasscom Foundation",
+    "date": "2025",
+    "url": "https://www.linkedin.com/in/hruthik-k-r-a32450294/details/certifications/",
+    "badge": "🚀",
+    "imageUrl": "assets/certificates/nasscom.png"
+  },
+  {
+    "id": 4,
+    "title": "Cloud Computing Fundamentals",
+    "issuer": "IBM SkillsBuild",
+    "date": "2025",
+    "url": "https://www.credly.com/badges/ba12dc12-d596-43b1-abf1-1a82a18d3d0c",
+    "badge": "🌩️",
+    "imageUrl": "assets/certificates/ibm_fundamentals.png"
+  },
+  {
+    "id": 5,
+    "title": "Introduction to Cloud",
+    "issuer": "IBM SkillsBuild",
+    "date": "2025",
+    "url": "https://courses.skillsbuild.skillsnetwork.site/certificates/79ecd839dac542e69d79b86937a85f0f",
+    "badge": "☁️",
+    "imageUrl": "assets/certificates/ibm_intro.png"
   }
 ]

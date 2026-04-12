@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hruthik K R - Resume</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --text-dark: #1f2937;
+            --text-light: #6b7280;
+            --border: #e5e7eb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: var(--text-dark);
+            background: #f3f4f6;
+            padding: 40px 20px;
+        }
+
+        .resume-container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 60px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            position: relative;
+        }
+
+        @media print {
+            body {
+                background: none;
+                padding: 0;
+            }
+            .resume-container {
+                box-shadow: none;
+                max-width: 100%;
+                padding: 40px;
+            }
+            .no-print {
+                display: none;
+            }
+        }
+
+        .no-print-header {
+            max-width: 900px;
+            margin: 0 auto 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .btn-print {
+            background: var(--primary);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 6px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: opacity 0.2s;
+            border: none;
+            cursor: pointer;
+        }
+
+        header {
+            border-bottom: 2px solid var(--border);
+            padding-bottom: 25px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header-info h1 {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+            letter-spacing: -0.025em;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(2, auto);
+            gap: 10px 30px;
+            font-size: 14px;
+            color: var(--text-light);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .contact-item a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .contact-item a:hover {
+            color: var(--primary);
+        }
+
+        section {
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-size: 18px;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            color: var(--primary);
+            margin-bottom: 15px;
+            font-weight: 700;
+            border-left: 4px solid var(--primary);
+            padding-left: 12px;
+        }
+
+        .summary p {
+            font-size: 15px;
+            color: #4b5563;
+        }
+
+        .skills-grid {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 12px;
+        }
+
+        .skill-group {
+            font-size: 15px;
+        }
+
+        .skill-group strong {
+            color: var(--text-dark);
+            width: 150px;
+            display: inline-block;
+        }
+
+        .experience-item, .education-item {
+            margin-bottom: 20px;
+        }
+
+        .item-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .item-title {
+            font-weight: 700;
+            font-size: 17px;
+        }
+
+        .item-subtitle {
+            font-weight: 600;
+            color: var(--text-light);
+            font-size: 15px;
+        }
+
+        .item-date {
+            color: var(--text-light);
+            font-size: 14px;
+        }
+
+        ul {
+            margin-left: 20px;
+            margin-top: 8px;
+            list-style-type: disc;
+        }
+
+        li {
+            font-size: 14.5px;
+            color: #4b5563;
+            margin-bottom: 4px;
+        }
+
+        .projects-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .project-item h3 {
+            font-size: 16px;
+            margin-bottom: 5px;
+        }
+
+        .project-item p {
+            font-size: 14.5px;
+            color: #4b5563;
+        }
+
+        .certs-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px 30px;
+        }
+
+        .cert-item {
+            font-size: 14.5px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="no-print no-print-header">
+        <p style="color: var(--text-light); font-size: 14px;">Preview Mode: This is your professional resume.</p>
+        <button onclick="window.print()" class="btn-print">Print to PDF / Save</button>
+    </div>
+
+    <div class="resume-container">
+        <header>
+            <div class="header-info">
+                <h1>HRUTHIK K R</h1>
+                <div class="contact-grid">
+                    <div class="contact-item">📞 8861818114</div>
+                    <div class="contact-item">📧 <a href="mailto:hruthikhruthikkr@gmail.com">hruthikhruthikkr@gmail.com</a></div>
+                    <div class="contact-item">📍 Tumkur, Karnataka</div>
+                    <div class="contact-item">🔗 <a href="https://linkedin.com/in/hruthik-k-r-a32450294" target="_blank">linkedin.com/in/hruthik-k-r-a32450294</a></div>
+                    <div class="contact-item">💻 <a href="https://github.com/Hruthik06" target="_blank">github.com/Hruthik06</a></div>
+                </div>
+            </div>
+        </header>
+
+        <section class="summary">
+            <h2>Summary</h2>
+            <p>Final-year BCA student with hands-on experience in full-stack web development, building scalable applications using Java, Spring Boot, REST APIs, and MySQL. Proficient in frontend technologies including HTML, CSS, and JavaScript, with a strong understanding of responsive design and user interface development. Experienced in developing real-world applications such as a social media platform and real-time tracking system, implementing authentication, database integration, and clean architecture practices. Passionate about building secure, efficient, and user-focused applications, and seeking opportunities as a Full Stack Developer.</p>
+        </section>
+
+        <section class="skills">
+            <h2>Skills</h2>
+            <div class="skills-grid">
+                <div class="skill-group"><strong>Languages:</strong> Java, Python, JavaScript, C, C++</div>
+                <div class="skill-group"><strong>Frontend:</strong> HTML5, CSS, JavaScript, React.js</div>
+                <div class="skill-group"><strong>Databases:</strong> MySQL, MongoDB, H2, Supabase</div>
+                <div class="skill-group"><strong>AI Tools:</strong> ChatGPT, GitHub Copilot</div>
+                <div class="skill-group"><strong>Tools & Tech:</strong> Spring Boot, REST APIs, Maven, Git, GitHub, Apache Tomcat, VS Code, Postman, MySQL Workbench</div>
+            </div>
+        </section>
+
+        <section class="education">
+            <h2>Education</h2>
+            <div class="education-item">
+                <div class="item-header">
+                    <span class="item-title">Vidyavahini First Grade College</span>
+                    <span class="item-date">2026</span>
+                </div>
+                <div class="item-subtitle">Bachelor of Computer Applications (BCA)</div>
+                <p style="font-size: 14px; color: var(--text-light); margin-top: 2px;">Tumkur, Karnataka | CGPA: 8.67</p>
+            </div>
+        </section>
+
+        <section class="experience">
+            <h2>Experience</h2>
+            <div class="experience-item">
+                <div class="item-header">
+                    <span class="item-title">Ethnotech Company</span>
+                </div>
+                <div class="item-subtitle">Software Development Intern (Training)</div>
+                <ul>
+                    <li>Built and tested Java-based applications using OOP principles during training</li>
+                    <li>Implemented debugging techniques and improved code efficiency</li>
+                    <li>Applied SDLC practices including requirement analysis, development, and testing</li>
+                </ul>
+            </div>
+        </section>
+
+        <section class="projects">
+            <h2>Projects</h2>
+            <div class="projects-grid">
+                <div class="project-item">
+                    <h3>Social Media Application</h3>
+                    <p>Designed and developed a secure backend system supporting user authentication and role-based authorization. Implemented RESTful APIs for user management, posts, and moderation workflows. Integrated MySQL with structured schema design and followed clean layered architecture for maintainability.</p>
+                </div>
+                <div class="project-item">
+                    <h3>Where Is My Bus - Real-Time Tracking Application</h3>
+                    <p>Built a real-time bus tracking system using API-based data flow. Handled backend logic and database interactions to provide live transport information.</p>
+                </div>
+                <div class="project-item">
+                    <h3>Web Application Development Project</h3>
+                    <p>Developed a responsive web application following SDLC best practices. Implemented frontend logic and MySQL database connectivity with focus on clean structure.</p>
+                </div>
+                <div class="project-item">
+                    <h3>FARM</h3>
+                    <p>Developed a web-based FARM management system using Java, Spring Boot, REST APIs, and MySQL for efficient crop and resource tracking. Implemented modules for managing land records, crop details, and agricultural activities with structured data handling. Designed responsive UI using HTML, CSS, and JavaScript, following clean architecture and SDLC practices.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="certifications">
+            <h2>Certifications</h2>
+            <div class="certs-list">
+                <div class="cert-item">• AWS Cloud Fundamentals (Basic AWS Course)</div>
+                <div class="cert-item">• Deloitte Data Analysis Job Simulation</div>
+                <div class="cert-item">• IBM - Introduction to Cloud Computing</div>
+                <div class="cert-item">• Forge Generative AI Program</div>
+                <div class="cert-item">• Google 5-Day Generative AI Workshop</div>
+                <div class="cert-item">• Cloud Computing Workshop</div>
+            </div>
+        </section>
+    </div>
+
+</body>
+</html>

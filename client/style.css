@@ -94,14 +94,17 @@ body {
     margin: 0 auto;
     display: flex;
     align-items: center;
-    gap: 2rem;
+    justify-content: space-between; /* Added to ensure logo and hamburger are spread out */
 }
 .nav-logo {
+    display: flex;
+    align-items: center;
     font-family: 'JetBrains Mono', monospace;
-    font-size: 1.2rem;
+    font-size: 1.15rem; /* Slightly smaller for mobile safety */
     font-weight: 600;
     text-decoration: none;
     letter-spacing: 0.05em;
+    flex-shrink: 0;
 }
 .logo-bracket { color: var(--clr-purple); }
 .logo-text { color: var(--text-primary); margin: 0 2px; }
@@ -853,6 +856,268 @@ body {
 }
 .submit-btn { margin-top: 0.5rem; justify-content: center; }
 
+/* Expanded Contact Info & Social Items */
+.contact-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem;
+}
+
+.contact-item {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 1.25rem;
+    background: var(--clr-glass);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-md);
+    transition: var(--transition);
+}
+
+.contact-item:hover {
+    border-color: rgba(139,92,246,0.35);
+    background: rgba(139,92,246,0.05);
+    transform: translateY(-2px);
+}
+
+.contact-value {
+    font-size: 0.85rem;
+    font-weight: 500;
+    color: var(--text-primary);
+    text-decoration: none;
+    display: block;
+    word-break: break-all;
+}
+
+.contact-item a.contact-value:hover {
+    color: #a78bfa;
+}
+
+/* Hire Modal Pop-up */
+.hire-modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(6, 8, 15, 0.7);
+    backdrop-filter: blur(12px);
+    z-index: 2000;
+    display: none; /* Controlled by JS */
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    opacity: 0;
+    transition: opacity 0.4s ease;
+}
+
+.hire-modal-overlay.active {
+    display: flex;
+    opacity: 1;
+}
+
+.hire-modal-content {
+    position: relative;
+    width: 100%;
+    max-width: 600px;
+    transform: scale(0.9) translateY(20px);
+    transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.hire-modal-overlay.active .hire-modal-content {
+    transform: scale(1) translateY(0);
+}
+
+.modal-close {
+    position: absolute;
+    top: 1rem;
+    right: 1.5rem;
+    background: none;
+    border: none;
+    color: var(--text-muted);
+    font-size: 2.5rem;
+    cursor: pointer;
+    z-index: 10;
+    line-height: 1;
+    transition: var(--transition);
+}
+
+.modal-close:hover {
+    color: var(--clr-purple);
+    transform: rotate(90deg);
+}
+
+.hire-card {
+    background: linear-gradient(135deg, rgba(139,92,246,0.15), rgba(59,130,246,0.08));
+    border: 1px solid rgba(139,92,246,0.4);
+    border-radius: var(--radius-xl);
+    padding: 3.5rem 2.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    backdrop-filter: blur(20px);
+    box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+}
+
+.hire-card::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle, rgba(139,92,246,0.1) 0%, transparent 70%);
+    z-index: 0;
+}
+
+.hire-card > * { position: relative; z-index: 1; }
+
+.hire-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 16px;
+    background: rgba(34,197,94,0.1);
+    border: 1px solid rgba(34,197,94,0.25);
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: #4ade80;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+.status-dot {
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: #22c55e;
+    box-shadow: 0 0 10px #22c55e;
+    animation: pulse 2s infinite;
+}
+
+.hire-card h3 {
+    font-size: 1.8rem;
+    font-weight: 800;
+    margin-bottom: 1.25rem;
+    background: var(--grad-vibrant);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+.hire-card p {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.8;
+    margin-bottom: 2.5rem;
+    max-width: 500px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.hire-card .btn {
+    padding: 1rem 3rem;
+    font-size: 1.05rem;
+}
+
+/* Success Message State */
+.contact-success-msg {
+    text-align: center;
+    padding: 3rem 2rem;
+    background: var(--clr-glass);
+    border: 1px solid rgba(34,197,94,0.3);
+    border-radius: var(--radius-lg);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+    animation: fadeInUp 0.5s ease both;
+}
+
+.success-icon {
+    font-size: 3rem;
+    margin-bottom: 0.5rem;
+}
+
+.contact-success-msg h3 {
+    font-size: 1.5rem;
+    color: var(--text-primary);
+}
+
+.contact-success-msg p {
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+
+/* 3D Certificate Gallery Overlay */
+.certs-3d-overlay {
+    position: fixed;
+    inset: 0;
+    background: radial-gradient(circle at center, rgba(10,12,25,0.95), rgba(4,5,10,1));
+    z-index: 3000;
+    display: none; /* Controlled by JS */
+    opacity: 0;
+    transition: opacity 0.5s ease;
+    backdrop-filter: blur(15px);
+}
+
+.certs-3d-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+.certs-3d-controls {
+    position: absolute;
+    top: 2rem;
+    left: 2rem;
+    right: 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    z-index: 10;
+}
+
+.control-hint {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 0.8rem;
+    color: var(--clr-purple);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    background: rgba(139,92,246,0.15);
+    padding: 8px 20px;
+    border: 1px solid rgba(139,92,246,0.3);
+    border-radius: 100px;
+    pointer-events: none;
+    box-shadow: 0 0 20px rgba(139,92,246,0.2);
+    animation: pulse 2s infinite;
+}
+
+.modal-close-certs {
+    background: var(--clr-glass);
+    border: 1px solid var(--clr-border);
+    color: var(--text-primary);
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    font-size: 1.8rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.modal-close-certs:hover {
+    background: var(--clr-purple);
+    transform: rotate(90deg);
+}
+
+#certs-3d-canvas {
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+}
+
+#certs-3d-canvas:active {
+    cursor: grabbing;
+}
+
 /* ===================================================
    FOOTER
    =================================================== */
@@ -922,7 +1187,13 @@ body {
     .nav-link { padding: 0.75rem 1rem; }
     .nav-cta { display: none; }
     .hamburger { display: flex; }
-    .navbar { padding: 0 1.25rem; }
+    .navbar { 
+        padding: 0 1rem; 
+        width: 100%;
+    }
+    .nav-container {
+        gap: 0; /* Removing gap for better control on mobile */
+    }
 
     .hero { padding: 90px 1.25rem 60px; }
     .hero-container { grid-template-columns: 1fr; gap: 3rem; text-align: center; }
@@ -940,17 +1211,18 @@ body {
     .skills-grid { grid-template-columns: 1fr; }
     .projects-grid { grid-template-columns: 1fr; }
     .project-card.featured { grid-column: auto; }
-    .contact-wrapper { grid-template-columns: 1fr; gap: 2.5rem; }
-    .contact-left .section-title { text-align: center; }
-    .contact-left .section-tag { display: block; text-align: center; }
     .contact-left .section-subtitle { text-align: center; }
+    .contact-info { grid-template-columns: 1fr; }
+    .hire-card { padding: 1.75rem; }
 }
 
 @media (max-width: 480px) {
-    .hero-title { font-size: 2.2rem; }
-    .hero-cta { flex-direction: column; width: 100%; }
-    .btn { justify-content: center; }
-    .social-links { justify-content: center; }
-    .canvas-wrapper { max-width: 100%; }
+    .navbar { padding: 0 0.75rem; }
+    .hero-title { font-size: 2rem; }
+    .hero-cta { flex-direction: column; width: 100%; gap: 0.75rem; }
+    .btn { width: 100%; justify-content: center; }
+    .social-links { justify-content: center; width: 100%; }
+    .canvas-wrapper { max-width: 100%; margin: 0 auto; }
     .card-code, .card-stats, .card-status { display: none; }
+    .section-header { margin-bottom: 2.5rem; }
 }

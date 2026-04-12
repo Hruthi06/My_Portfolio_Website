@@ -286,6 +286,47 @@ function attachSkillBarObserver() {
 })();
 
 // ===================================================
+// 8.5 DYNAMIC CERTIFICATE CARDS from API
+// ===================================================
+(function loadCertificates() {
+    const grid = document.getElementById('certs-grid');
+    if (!grid) return;
+
+    function buildCertCard(cert, index) {
+        const delay = `reveal-delay-${(index % 4) + 1}`;
+        const card = document.createElement('div');
+        card.className = `cert-card reveal ${delay}`;
+        card.id = `cert-${cert.id}`;
+        card.innerHTML = `
+            <div class="cert-badge">${cert.badge || '🏆'}</div>
+            <div class="cert-body">
+                <h3 class="cert-title">${cert.title}</h3>
+                <span class="cert-issuer">${cert.issuer} · ${cert.date}</span>
+            </div>
+            <a href="${cert.url}" target="_blank" rel="noopener" class="cert-link" id="cert${cert.id}-link" aria-label="View Certificate">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>`;
+        return card;
+    }
+
+    fetch('/api/certificates')
+        .then(r => r.json())
+        .then(certs => {
+            if (!certs.length) return;
+            grid.innerHTML = '';
+            certs.forEach((c, i) => grid.appendChild(buildCertCard(c, i)));
+
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+                });
+            }, { threshold: 0.1 });
+            grid.querySelectorAll('.reveal').forEach(el => obs.observe(el));
+        })
+        .catch(err => console.warn('Certificates API unavailable, using static HTML.', err));
+})();
+
+// ===================================================
 // 9. CONTACT FORM with feedback states
 // ===================================================
 (function initContactForm() {
@@ -303,9 +344,21 @@ function attachSkillBarObserver() {
 
         setBtnState(submitBtn, 'loading');
         await sleep(1400);
+        
+        // Success State
+        form.style.display = 'none';
+        const successMsg = document.createElement('div');
+        successMsg.className = 'contact-success-msg reveal visible';
+        successMsg.innerHTML = `
+            <div class="success-icon">🎉</div>
+            <h3>Thank You!</h3>
+            <p>Your message has been sent successfully. I'll get back to you soon.</p>
+            <button class="btn btn-secondary" onclick="location.reload()">Send Another</button>
+        `;
+        form.parentElement.appendChild(successMsg);
+        
         setBtnState(submitBtn, 'success');
         form.reset();
-        setTimeout(() => setBtnState(submitBtn, 'idle'), 4000);
     });
 
     function setBtnState(btn, state) {
@@ -384,3 +437,34 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 // 12. INITIAL skill bar trigger (for static HTML fallback)
 // ===================================================
 attachSkillBarObserver();
+
+// ===================================================
+// 13. HIRE MODAL
+// ===================================================
+(function initHireModal() {
+    const modal = document.getElementById('hire-modal');
+    const openBtn = document.getElementById('nav-hire-btn');
+    const closeBtn = document.getElementById('modal-close-btn');
+
+    if (!modal || !openBtn || !closeBtn) return;
+
+    openBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        modal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+
+    const closeModal = () => {
+        modal.classList.remove('active');
+        document.body.style.overflow = '';
+    };
+
+    closeBtn.addEventListener('click', closeModal);
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) closeModal();
+    });
+
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && modal.classList.contains('active')) closeModal();
+    });
+})();
