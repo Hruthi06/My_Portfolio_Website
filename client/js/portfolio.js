@@ -391,22 +391,44 @@ function attachSkillBarObserver() {
         if (!name || !email || !message) { shakeEl(submitBtn); return; }
 
         setBtnState(submitBtn, 'loading');
-        await sleep(1400);
         
-        // Success State
-        form.style.display = 'none';
-        const successMsg = document.createElement('div');
-        successMsg.className = 'contact-success-msg reveal visible';
-        successMsg.innerHTML = `
-            <div class="success-icon">🎉</div>
-            <h3>Thank You!</h3>
-            <p>Your message has been sent successfully. I'll get back to you soon.</p>
-            <button class="btn btn-secondary" onclick="location.reload()">Send Another</button>
-        `;
-        form.parentElement.appendChild(successMsg);
-        
-        setBtnState(submitBtn, 'success');
-        form.reset();
+        try {
+            const response = await fetch('/api/contact', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ name, email, message })
+            });
+            
+            const data = await response.json();
+            
+            if (response.ok) {
+                // Success State
+                form.style.display = 'none';
+                const successMsg = document.createElement('div');
+                successMsg.className = 'contact-success-msg reveal visible';
+                // Add simple inline style for the success message to match design
+                successMsg.style.textAlign = 'center';
+                successMsg.style.padding = '2rem';
+                successMsg.innerHTML = `
+                    <div class="success-icon" style="font-size: 3rem; margin-bottom: 1rem;">🎉</div>
+                    <h3 style="font-size: 1.5rem; margin-bottom: 0.5rem; color: var(--text-primary)">Thank You!</h3>
+                    <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">${data.mock ? '[Dev Mode] Message noted!' : 'Message sent successfully. I\\'ll get back to you soon.'}</p>
+                    <button class="btn btn-secondary" onclick="location.reload()">Send Another</button>
+                `;
+                form.parentElement.appendChild(successMsg);
+                
+                setBtnState(submitBtn, 'success');
+                form.reset();
+            } else {
+                throw new Error(data.error || 'Failed to send message.');
+            }
+        } catch (error) {
+            console.error('Contact form error:', error);
+            setBtnState(submitBtn, 'error');
+            setTimeout(() => setBtnState(submitBtn, 'default'), 3000);
+            shakeEl(submitBtn);
+            alert(typeof error.message === 'string' ? error.message : 'Error sending message. Please try again.');
+        }
     });
 
     function setBtnState(btn, state) {
@@ -424,6 +446,11 @@ function attachSkillBarObserver() {
             btn.style.opacity   = '';
             btn.style.background = 'linear-gradient(135deg,#22c55e,#16a34a)';
             btn.style.boxShadow  = '0 0 28px rgba(34,197,94,.4)';
+        } else if (state === 'error') {
+            span.textContent = 'Error Sending';
+            if (svg) svg.style.display = 'none';
+            btn.disabled = false;
+            btn.style.background = 'linear-gradient(135deg,#ef4444,#dc2626)';
         } else {
             span.textContent     = 'Send Message';
             if (svg) svg.style.display = '';
@@ -488,7 +515,7 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
     });
 
     const attachMagnet = () => {
-        document.querySelectorAll('a, button, input, textarea, .nav-logo').forEach(el => {
+        document.querySelectorAll('a, button, input, textarea, .nav-logo, .project-card').forEach(el => {
             if(!el.dataset.magnet) {
                 el.dataset.magnet = 'true';
                 el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
@@ -510,15 +537,26 @@ attachSkillBarObserver();
 // ===================================================
 (function initHireModal() {
     const modal = document.getElementById('hire-modal');
-    const openBtn = document.getElementById('nav-hire-btn');
     const closeBtn = document.getElementById('modal-close-btn');
 
-    if (!modal || !openBtn || !closeBtn) return;
+    if (!modal || !closeBtn) return;
 
-    openBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        modal.classList.add('active');
-        document.body.style.overflow = 'hidden';
+    // Use event delegation for opening buttons
+    document.addEventListener('click', (e) => {
+        const btn = e.target.closest('#nav-hire-btn, #open-contact-modal, #hero-hire-btn');
+        if (btn) {
+            e.preventDefault();
+            modal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            
+            // If there's a success message from a previous submission, reset it
+            const successMsg = modal.querySelector('.contact-success-msg');
+            const form = modal.querySelector('#contact-form');
+            if (successMsg && form) {
+                successMsg.remove();
+                if (form) form.style.display = 'block';
+            }
+        }
     });
 
     const closeModal = () => {

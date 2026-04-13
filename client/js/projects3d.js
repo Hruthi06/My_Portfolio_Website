@@ -37,7 +37,11 @@ function setupScene(canvas) {
 
     renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
     renderer.setPixelRatio(window.devicePixelRatio);
-    renderer.setSize(window.innerWidth, window.innerHeight);
+    
+    const rect = canvas.getBoundingClientRect();
+    renderer.setSize(rect.width, rect.height);
+    camera.aspect = rect.width / rect.height;
+    camera.updateProjectionMatrix();
 
     controls = new OrbitControls(camera, renderer.domElement);
     controls.enableDamping = true;

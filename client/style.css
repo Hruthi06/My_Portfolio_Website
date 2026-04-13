@@ -885,16 +885,23 @@ body {
     background: linear-gradient(180deg, var(--clr-bg2) 0%, var(--clr-bg) 100%);
 }
 .contact-wrapper {
-    display: grid;
-    grid-template-columns: 1fr 1.3fr;
-    gap: 5rem;
-    align-items: start;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4.5rem;
+    max-width: 800px;
+    margin: 0 auto;
 }
-.contact-left { padding-top: 0.5rem; }
-.contact-left .section-title { text-align: left; }
-.contact-left .section-tag { margin-bottom: 1rem; }
-.contact-left .section-subtitle { text-align: left; margin: 0 0 2rem; max-width: none; }
-.contact-info { display: flex; flex-direction: column; gap: 1rem; }
+.contact-left { padding-top: 0.5rem; text-align: center; }
+.contact-left .section-title { text-align: center; }
+.contact-left .section-tag { margin-bottom: 1rem; display: inline-block; }
+.contact-left .section-subtitle { text-align: center; margin: 0 auto 2rem; max-width: 600px; }
+.contact-info { 
+    display: flex; 
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 1rem; 
+}
 .contact-item {
     display: flex;
     align-items: center;
@@ -994,12 +1001,16 @@ body {
     font-size: 0.85rem;
     font-weight: 500;
     color: var(--text-primary);
-    text-decoration: none;
     display: block;
     word-break: break-all;
 }
 
-.contact-item a.contact-value:hover {
+a.contact-item {
+    text-decoration: none;
+    color: inherit;
+}
+
+a.contact-item:hover .contact-value {
     color: #a78bfa;
 }
 
@@ -1025,8 +1036,8 @@ body {
 
 .hire-modal-content {
     position: relative;
-    width: 100%;
-    max-width: 600px;
+    width: 90%;
+    max-width: 480px;
     transform: scale(0.9) translateY(20px);
     transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
 }
@@ -1126,6 +1137,82 @@ body {
     font-size: 1.05rem;
 }
 
+/* Contact CTA Card (Main Section) */
+.contact-cta-card {
+    background: var(--clr-glass);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-lg);
+    padding: 2.5rem 1.5rem;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.25rem;
+    height: auto;
+    width: 100%;
+    max-width: 380px;
+    margin: 0 auto;
+    justify-content: center;
+    transition: var(--transition);
+    box-shadow: var(--shadow-sm);
+    position: relative;
+    overflow: hidden;
+}
+
+.contact-cta-card::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(circle at top right, rgba(139,92,246,0.05), transparent 70%);
+    pointer-events: none;
+}
+
+.contact-cta-card:hover {
+    border-color: rgba(139,92,246,0.4);
+    background: rgba(139,92,246,0.08);
+    transform: translateY(-5px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.3), var(--shadow-glow);
+}
+
+.cta-icon {
+    font-size: 3rem;
+    filter: drop-shadow(0 0 12px rgba(139,92,246,0.3));
+    margin-bottom: 0.25rem;
+}
+
+.contact-cta-card h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+}
+
+.contact-cta-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    max-width: 280px;
+    line-height: 1.5;
+}
+
+.hire-modal-content {
+    max-height: 85vh;
+    overflow-y: auto;
+    border-radius: var(--radius-lg);
+    scrollbar-width: thin;
+    scrollbar-color: var(--clr-purple) transparent;
+}
+
+.hire-modal-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.hire-modal-content::-webkit-scrollbar-thumb {
+    background: var(--clr-purple);
+    border-radius: 3px;
+}
+
+.hire-card {
+    padding: 2.5rem 2rem;
+}
+
 /* Success Message State */
 .contact-success-msg {
     text-align: center;
@@ -1155,7 +1242,7 @@ body {
     margin-bottom: 1.5rem;
 }
 
-/* 3D Certificate Gallery Overlay */
+/* 3D Certificate Gallery Overlay (Full Screen for Immersion) */
 .certs-3d-overlay {
     position: fixed;
     inset: 0;
@@ -1166,6 +1253,33 @@ body {
     transition: opacity 0.5s ease;
     backdrop-filter: blur(15px);
 }
+
+/* 3D Project Hologram - Centered & Refined */
+#projects-3d-modal {
+    background: rgba(6, 8, 15, 0.5); /* Lighter backdrop */
+    display: none;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+}
+
+#projects-3d-modal.active {
+    display: flex;
+    opacity: 1;
+}
+
+#projects-3d-modal #projects-3d-canvas {
+    width: 90% !important;
+    height: 80% !important;
+    max-width: 900px;
+    max-height: 600px;
+    background: rgba(139, 92, 246, 0.03);
+    border: 1px solid rgba(139, 92, 246, 0.2);
+    border-radius: var(--radius-lg);
+    box-shadow: 0 0 50px rgba(0,0,0,0.5), var(--shadow-glow);
+    cursor: grab;
+}
+
 
 .certs-3d-overlay.active {
     display: block;

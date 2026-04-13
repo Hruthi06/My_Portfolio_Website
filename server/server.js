@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
 const path = require('path');
@@ -14,11 +15,13 @@ const projectRoutes = require('./routes/projects');
 const skillRoutes = require('./routes/skills');
 const certificateRoutes = require('./routes/certificates');
 const experienceRoutes = require('./routes/experience');
+const contactRoutes = require('./routes/contact');
 
 app.use('/api/projects', projectRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/certificates', certificateRoutes);
 app.use('/api/experience', experienceRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Static files for frontend
 app.use(express.static(path.join(__dirname, '../client')));
