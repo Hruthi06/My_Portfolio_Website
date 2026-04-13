@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "type": "experience",
+    "title": "Software Development Intern",
+    "institution": "Ethnotech Company",
+    "duration": "2025",
+    "description": "Built and tested Java-based applications using OOP principles. Implemented debugging techniques and improved code efficiency based on SDLC practices.",
+    "icon": "💼"
+  },
+  {
+    "id": 2,
+    "type": "education",
+    "title": "Bachelor of Computer Applications (BCA)",
+    "institution": "Vidyavahini First Grade College",
+    "duration": "Graduating 2026",
+    "description": "Tumkur, Karnataka | CGPA: 8.67. Focused on full-stack web development, advanced software engineering, and database systems.",
+    "icon": "🎓"
+  }
+]

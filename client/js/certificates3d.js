@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
 
 (function initCerts3D() {
     const modal = document.getElementById('certs-3d-modal');
@@ -8,14 +9,10 @@ import * as THREE from 'three';
 
     if (!modal || !openBtn || !closeBtn || !canvas) return;
 
-    let scene, camera, renderer, ring;
+    let scene, camera, renderer, ring, controls;
+    let particlesMesh, bgGeoGroup;
     let isInitialized = false;
-    let targetRotation = 0;
-    let currentRotation = 0;
-    
-    // Drag variables
-    let isDragging = false;
-    let previousMouseX = 0;
+    let autoRotateSpeed = 0.003;
 
     const textureLoader = new THREE.TextureLoader();
 
@@ -29,121 +26,181 @@ import * as THREE from 'three';
         // Setup Scene
         scene = new THREE.Scene();
         camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 0.1, 1000);
-        camera.position.z = 12;
+        camera.position.set(0, 2, 14);
 
         renderer = new THREE.WebGLRenderer({ canvas, antialias: true, alpha: true });
         renderer.setPixelRatio(window.devicePixelRatio);
         renderer.setSize(window.innerWidth, window.innerHeight);
 
+        // OrbitControls (360 View)
+        controls = new OrbitControls(camera, renderer.domElement);
+        controls.enableDamping = true;
+        controls.dampingFactor = 0.05;
+        controls.rotateSpeed = 0.5;
+        controls.enablePan = false; // Keep focus on center
+        controls.minDistance = 8;
+        controls.maxDistance = 25;
+
         // Lights
-        const ambient = new THREE.AmbientLight(0xffffff, 0.8);
+        const ambient = new THREE.AmbientLight(0xffffff, 0.9);
         scene.add(ambient);
         const point = new THREE.PointLight(0xffffff, 2, 50);
-        point.position.set(0, 5, 10);
+        point.position.set(0, 10, 15);
         scene.add(point);
 
         // Core Group
         ring = new THREE.Group();
         scene.add(ring);
 
-        const radius = 7;
+        // --- Background Starfield ---
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 1500;
+        const posArray = new Float32Array(particlesCount * 3);
+        for(let i=0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 60; // Spread across 60 units
+        }
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.05,
+            color: 0x8b5cf6, // Theme purple
+            transparent: true,
+            opacity: 0.6,
+            blending: THREE.AdditiveBlending
+        });
+        particlesMesh = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particlesMesh);
+
+        // --- Floating Geometry ---
+        bgGeoGroup = new THREE.Group();
+        scene.add(bgGeoGroup);
+        const geoMaterial = new THREE.MeshBasicMaterial({ 
+            color: 0xec4899, wireframe: true, transparent: true, opacity: 0.1 
+        });
+        for(let i=0; i<15; i++) {
+            const mesh = new THREE.Mesh(
+                new THREE.IcosahedronGeometry(Math.random() * 2 + 0.5, 0),
+                geoMaterial
+            );
+            mesh.position.set(
+                (Math.random() - 0.5) * 40,
+                (Math.random() - 0.5) * 40,
+                (Math.random() - 0.5) * 40 - 15 // push backwards
+            );
+            mesh.rotation.set(Math.random()*Math.PI, Math.random()*Math.PI, 0);
+            bgGeoGroup.add(mesh);
+        }
+
+        const radius = 9;
         const count = certificates.length;
 
-        function createCardTexture(cert) {
+        // Helper to create text texture for the back
+        function createBackTexture(cert) {
             const c = document.createElement('canvas');
             const ctx = c.getContext('2d');
             c.width = 1024;
             c.height = 768;
 
-            // White paper background (Real Certificate look)
-            ctx.fillStyle = '#ffffff';
+            // Premium Dark Background
+            ctx.fillStyle = '#0a0a0f';
             ctx.fillRect(0, 0, 1024, 768);
 
-            // Artistic border
-            ctx.strokeStyle = '#8b5cf6';
-            ctx.lineWidth = 40;
-            ctx.strokeRect(0, 0, 1024, 768);
-            
-            ctx.strokeStyle = '#000000';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(60, 60, 904, 648);
+            // subtle gradient border
+            const grad = ctx.createLinearGradient(0, 0, 1024, 768);
+            grad.addColorStop(0, '#8b5cf6');
+            grad.addColorStop(1, '#ec4899');
+            ctx.strokeStyle = grad;
+            ctx.lineWidth = 30;
+            ctx.strokeRect(15, 15, 994, 738);
 
-            // Header (Issuer logo/text)
-            ctx.fillStyle = '#111827';
-            ctx.font = 'bold 48px Arial, sans-serif';
+            // Title
+            ctx.fillStyle = '#ffffff';
+            ctx.font = 'bold 50px Poppins, sans-serif';
             ctx.textAlign = 'center';
-            ctx.fillText(cert.issuer.toUpperCase(), 512, 140);
+            wrapText(ctx, cert.title, 512, 180, 800, 60);
 
-            // Main Content
-            ctx.fillStyle = '#374151';
-            ctx.font = '32px Georgia, serif';
-            ctx.fillText('C E R T I F I C A T E   O F   A C H I E V E M E N T', 512, 240);
-
-            ctx.fillStyle = '#111827';
-            ctx.font = 'bold 64px "Times New Roman", serif';
-            ctx.fillText('Hruthik K R', 512, 380);
-
+            // Divider
             ctx.fillStyle = '#4b5563';
-            ctx.font = '36px Georgia, serif';
-            ctx.fillText('has successfully completed the course in', 512, 460);
+            ctx.fillRect(300, 320, 424, 4);
 
-            ctx.fillStyle = '#8b5cf6';
-            ctx.font = 'bold 52px Georgia, serif';
-            ctx.fillText(cert.title, 512, 550);
+            // Description
+            ctx.fillStyle = '#9ca3af';
+            ctx.font = '32px Poppins, sans-serif';
+            wrapText(ctx, cert.description, 512, 420, 850, 45);
 
-            // Footer / Seal
-            ctx.fillStyle = '#6b7280';
-            ctx.font = '24px Arial, sans-serif';
-            ctx.fillText(`Date: ${cert.date} | ID: CERT-${cert.id}`, 512, 650);
-            
-            // Emoji Badge as a "Seal"
-            ctx.font = '80px Segoe UI Emoji';
-            ctx.fillText(cert.badge || '🏆', 850, 620);
+            // Badge/Icon in center
+            ctx.font = '100px Arial';
+            ctx.fillText(cert.badge || '📜', 512, 650);
 
-            const texture = new THREE.CanvasTexture(c);
-            texture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-            return texture;
+            return new THREE.CanvasTexture(c);
         }
 
-        certificates.forEach((cert, i) => {
-            const angle = (i / count) * Math.PI * 2;
-            
-            // Create Card Container
-            const cardGroup = new THREE.Group();
-            
-            // Card Geometry (Paper Aspect Ratio)
-            const geometry = new THREE.PlaneGeometry(5, 3.8);
-            
-            const material = new THREE.MeshPhongMaterial({
-                map: createCardTexture(cert),
-                side: THREE.FrontSide, // Front side only for efficiency
-                transparent: true,
-                opacity: 0.95,
-                shininess: 40
+        // Simple text wrapping helper
+        function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+            const words = text.split(' ');
+            let line = '';
+            for(let n = 0; n < words.length; n++) {
+                let testLine = line + words[n] + ' ';
+                let metrics = ctx.measureText(testLine);
+                if (metrics.width > maxWidth && n > 0) {
+                    ctx.fillText(line, x, y);
+                    line = words[n] + ' ';
+                    y += lineHeight;
+                } else {
+                    line = testLine;
+                }
+            }
+            ctx.fillText(line, x, y);
+        }
+
+        const cardPromises = certificates.map((cert, i) => {
+            return new Promise((resolve) => {
+                textureLoader.load(cert.imageUrl, (texture) => {
+                    const angle = (i / count) * Math.PI * 2;
+                    const cardGroup = new THREE.Group();
+                    const geometry = new THREE.PlaneGeometry(5.6, 4);
+                    
+                    // Front side (Image)
+                    const material = new THREE.MeshPhongMaterial({
+                        map: texture,
+                        transparent: true,
+                        opacity: 0,
+                        side: THREE.FrontSide
+                    });
+                    const cardMesh = new THREE.Mesh(geometry, material);
+                    
+                    // Back side (Description)
+                    const backMaterial = new THREE.MeshPhongMaterial({ 
+                        map: createBackTexture(cert),
+                        side: THREE.BackSide
+                    });
+                    const cardBack = new THREE.Mesh(geometry, backMaterial);
+                    
+                    cardGroup.add(cardMesh);
+                    cardGroup.add(cardBack);
+
+                    cardGroup.position.x = Math.sin(angle) * radius;
+                    cardGroup.position.z = Math.cos(angle) * radius;
+                    cardGroup.lookAt(0, 0, 0);
+                    cardGroup.rotation.y += Math.PI; 
+
+                    ring.add(cardGroup);
+                    
+                    // Fade in
+                    let opacity = 0;
+                    const fadeIn = () => {
+                        opacity += 0.05;
+                        material.opacity = opacity;
+                        if (opacity < 1) requestAnimationFrame(fadeIn);
+                    };
+                    fadeIn();
+
+                    resolve();
+                });
             });
-            
-            const cardMesh = new THREE.Mesh(geometry, material);
-            
-            // Back of the card (prevent mirroring)
-            const backMaterial = new THREE.MeshBasicMaterial({ color: 0x161c31 });
-            const cardBack = new THREE.Mesh(geometry, backMaterial);
-            cardBack.rotation.y = Math.PI; // Face opposite
-            cardGroup.add(cardBack);
-
-            cardGroup.add(cardMesh);
-
-            // Position card on circle
-            cardGroup.position.x = Math.sin(angle) * radius;
-            cardGroup.position.z = Math.cos(angle) * radius;
-            
-            // Cards face OUTWARD (correct perspective from outside)
-            cardGroup.lookAt(0, 0, 0);
-            cardGroup.rotation.y += Math.PI; 
-
-            ring.add(cardGroup);
         });
 
-        ring.rotation.x = 0.1;
+        await Promise.all(cardPromises);
+
         isInitialized = true;
         animate();
     }
@@ -152,17 +209,25 @@ import * as THREE from 'three';
         if (!modal.classList.contains('active')) return;
         requestAnimationFrame(animate);
 
-        // Continuous slow rotation if not dragging
-        if (!isDragging) {
-            targetRotation += 0.002;
+        controls.update();
+
+        // Slow auto-rotation when user isn't interacting
+        if (!controls.active) {
+            ring.rotation.y += autoRotateSpeed;
         }
 
-        // Smooth interpolation
-        currentRotation += (targetRotation - currentRotation) * 0.08;
-        ring.rotation.y = currentRotation;
+        // Float effect
+        const time = Date.now() * 0.001;
+        ring.position.y = Math.sin(time) * 0.2;
 
-        // Subtle float
-        ring.position.y = Math.sin(Date.now() * 0.001) * 0.2;
+        // Animate Background
+        particlesMesh.rotation.y -= 0.0005;
+        bgGeoGroup.rotation.x += 0.001;
+        bgGeoGroup.rotation.y += 0.001;
+        bgGeoGroup.children.forEach(c => {
+            c.rotation.x += 0.002;
+            c.rotation.y += 0.002;
+        });
 
         renderer.render(scene, camera);
     }

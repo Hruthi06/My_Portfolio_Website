@@ -666,6 +666,115 @@ body {
 .skill-bar.animated { width: var(--w); }
 
 /* ===================================================
+   EXPERIENCE SECTION (TIMELINE)
+   =================================================== */
+.experience-section {
+    background: var(--clr-bg2);
+}
+.timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem 0;
+}
+.timeline::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 28px;
+    width: 2px;
+    background: var(--clr-border);
+    border-radius: 2px;
+}
+.timeline-item {
+    position: relative;
+    padding-left: 80px;
+    margin-bottom: 3rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: var(--transition-slow);
+}
+.timeline-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+.timeline-icon {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: var(--clr-bg);
+    border: 2px solid var(--clr-purple);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.5rem;
+    box-shadow: 0 0 15px rgba(139,92,246,0.3);
+    z-index: 2;
+}
+.timeline-content {
+    background: var(--clr-glass);
+    border: 1px solid var(--clr-border);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem 2rem;
+    position: relative;
+    transition: var(--transition);
+}
+.timeline-content:hover {
+    border-color: rgba(139,92,246,0.4);
+    box-shadow: var(--shadow-sm);
+    transform: translateX(5px);
+}
+.timeline-content::before {
+    content: '';
+    position: absolute;
+    left: -10px;
+    top: 20px;
+    border-style: solid;
+    border-width: 10px 10px 10px 0;
+    border-color: transparent var(--clr-border) transparent transparent;
+}
+.timeline-date {
+    display: inline-block;
+    padding: 4px 12px;
+    background: rgba(139,92,246,0.1);
+    color: #a78bfa;
+    border-radius: 100px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    font-family: 'JetBrains Mono', monospace;
+}
+.timeline-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    margin-bottom: 0.25rem;
+    color: var(--text-primary);
+}
+.timeline-institution {
+    font-size: 0.95rem;
+    color: var(--text-secondary);
+    font-weight: 500;
+    margin-bottom: 1rem;
+}
+.timeline-desc {
+    font-size: 0.9rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+}
+
+@media (max-width: 768px) {
+    .timeline::before { left: 20px; }
+    .timeline-item { padding-left: 60px; }
+    .timeline-icon { width: 42px; height: 42px; font-size: 1.1rem; }
+    .timeline-content { padding: 1.25rem; }
+    .timeline-content::before { border-width: 8px 8px 8px 0; left: -8px; top: 13px; }
+}
+
+/* ===================================================
    PROJECTS SECTION
    =================================================== */
 .projects-section {
@@ -687,6 +796,7 @@ body {
     display: flex;
     flex-direction: column;
     gap: 1rem;
+    cursor: none; /* custom cursor will handle this, but it needs to trigger hover state */
 }
 .project-card.featured {
     grid-column: 1 / -1;

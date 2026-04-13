@@ -46,6 +46,7 @@
             <ul class="nav-links" id="nav-links">
                 <li><a href="#hero" class="nav-link active" id="nav-home">Home</a></li>
                 <li><a href="#skills" class="nav-link" id="nav-skills">Skills</a></li>
+                <li><a href="#experience" class="nav-link" id="nav-experience">Experience</a></li>
                 <li><a href="#projects" class="nav-link" id="nav-projects">Projects</a></li>
                 <li><a href="#certifications" class="nav-link" id="nav-certs">Certs</a></li>
                 <li><a href="#contact" class="nav-link" id="nav-contact">Contact</a></li>
@@ -228,6 +229,20 @@
                     <p>Vanilla JS, async programming, DOM manipulation, and modern ES6+ features.</p>
                     <div class="skill-level"><div class="skill-bar" style="--w:87%"></div></div>
                 </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ==================== EXPERIENCE SECTION ==================== -->
+    <section class="section experience-section" id="experience">
+        <div class="section-container">
+            <div class="section-header" id="experience-header">
+                <span class="section-tag">My Journey</span>
+                <h2 class="section-title">Education & <span class="gradient-text">Experience</span></h2>
+                <p class="section-subtitle">Academic and professional milestones shaping my career.</p>
+            </div>
+            <div class="timeline" id="timeline-container">
+                <!-- Dynamically loaded by portfolio.js -->
             </div>
         </div>
     </section>
@@ -465,9 +480,19 @@
         <canvas id="certs-3d-canvas"></canvas>
     </div>
 
+    <!-- ==================== 3D PROJECT HOLOGRAM ==================== -->
+    <div class="certs-3d-overlay" id="projects-3d-modal">
+        <div class="certs-3d-controls">
+            <div class="control-hint">Interact with the Hologram</div>
+            <button class="modal-close-certs" id="close-projects-3d">&times;</button>
+        </div>
+        <canvas id="projects-3d-canvas" style="width:100%; height:100%;"></canvas>
+    </div>
+
     <!-- Main JS -->
     <script type="module" src="js/hero3d.js"></script>
     <script src="js/portfolio.js"></script>
     <script type="module" src="js/certificates3d.js"></script>
+    <script type="module" src="js/projects3d.js"></script>
 </body>
 </html>

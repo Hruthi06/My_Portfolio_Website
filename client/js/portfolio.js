@@ -237,6 +237,46 @@ function attachSkillBarObserver() {
 })();
 
 // ===================================================
+// 7.5 DYNAMIC EXPERIENCE TIMELINE
+// ===================================================
+(function loadExperience() {
+    const container = document.getElementById('timeline-container');
+    if (!container) return;
+
+    function buildTimelineItem(item, index) {
+        const delay = `reveal-delay-${(index % 4) + 1}`;
+        const div = document.createElement('div');
+        div.className = `timeline-item reveal ${delay}`;
+        div.innerHTML = `
+            <div class="timeline-icon">${item.icon || '🎓'}</div>
+            <div class="timeline-content">
+                <span class="timeline-date">${item.duration}</span>
+                <h3 class="timeline-title">${item.title}</h3>
+                <h4 class="timeline-institution">${item.institution}</h4>
+                <p class="timeline-desc">${item.description}</p>
+            </div>
+        `;
+        return div;
+    }
+
+    fetch('/api/experience')
+        .then(r => r.json())
+        .then(data => {
+            if (!data.length) return;
+            container.innerHTML = '';
+            data.forEach((item, i) => container.appendChild(buildTimelineItem(item, i)));
+
+            const obs = new IntersectionObserver((entries) => {
+                entries.forEach(e => {
+                    if (e.isIntersecting) { e.target.classList.add('visible'); obs.unobserve(e.target); }
+                });
+            }, { threshold: 0.1 });
+            container.querySelectorAll('.timeline-item').forEach(el => obs.observe(el));
+        })
+        .catch(err => console.warn('Experience API unavailable.', err));
+})();
+
+// ===================================================
 // 8. DYNAMIC PROJECT CARDS from API
 // ===================================================
 (function loadProjects() {
@@ -264,6 +304,14 @@ function attachSkillBarObserver() {
             <h3 class="project-title">${project.title}</h3>
             <p class="project-desc">${project.description}</p>
             <div class="project-tags">${tags}</div>`;
+            
+        card.addEventListener('click', (e) => {
+            if (e.target.closest('a')) return; // ignore links
+            if (window.openProject3D) {
+                window.openProject3D(project.title, project.description, project.tags || []);
+            }
+        });
+
         return card;
     }
 
@@ -411,26 +459,45 @@ document.querySelectorAll('a[href^="#"]').forEach(a => {
 });
 
 // ===================================================
-// 11. CURSOR GLOW (desktop only)
+// 11. CUSTOM MAGNETIC CURSOR (desktop only)
 // ===================================================
-(function initCursorGlow() {
+(function initCustomCursor() {
     if (window.matchMedia('(hover: none)').matches) return;
-    const glow = document.createElement('div');
-    glow.setAttribute('aria-hidden', 'true');
-    Object.assign(glow.style, {
-        width: '320px', height: '320px',
-        position: 'fixed', top: '0', left: '0',
-        pointerEvents: 'none', zIndex: '9999',
-        background: 'radial-gradient(circle, rgba(139,92,246,.07) 0%, transparent 70%)',
-        transform: 'translate(-50%,-50%)',
-        borderRadius: '50%',
-        transition: 'left .08s ease, top .08s ease',
-    });
-    document.body.appendChild(glow);
+    
+    // Inject Styles safely
+    const style = document.createElement('style');
+    style.innerHTML = `
+        body, a, button, input, textarea { cursor: none !important; }
+        .cursor-dot { width: 8px; height: 8px; background: #8b5cf6; position: fixed; top: 0; left: 0; border-radius: 50%; pointer-events: none; z-index: 10000; transform: translate(-50%, -50%); transition: width 0.2s, height 0.2s; }
+        .cursor-ring { width: 40px; height: 40px; border: 2px solid rgba(139, 92, 246, 0.5); position: fixed; top: 0; left: 0; border-radius: 50%; pointer-events: none; z-index: 9999; transform: translate(-50%, -50%); transition: width 0.25s, height 0.25s, border-color 0.25s, background-color 0.25s, left 0.1s ease-out, top 0.1s ease-out; }
+        .cursor-glow { width: 320px; height: 320px; background: radial-gradient(circle, rgba(139,92,246,0.08) 0%, transparent 70%); position: fixed; top: 0; left: 0; border-radius: 50%; pointer-events: none; z-index: 9998; transform: translate(-50%, -50%); transition: left 0.15s ease-out, top 0.15s ease-out; }
+        .cursor-hover .cursor-dot { width: 0; height: 0; }
+        .cursor-hover .cursor-ring { width: 60px; height: 60px; border-color: #ec4899; background: rgba(236, 72, 153, 0.15); }
+    `;
+    document.head.appendChild(style);
+
+    const dot = document.createElement('div'); dot.className = 'cursor-dot';
+    const ring = document.createElement('div'); ring.className = 'cursor-ring';
+    const glow = document.createElement('div'); glow.className = 'cursor-glow';
+    document.body.prepend(glow, ring, dot);
+
     document.addEventListener('mousemove', e => {
-        glow.style.left = e.clientX + 'px';
-        glow.style.top  = e.clientY + 'px';
+        dot.style.left = e.clientX + 'px'; dot.style.top = e.clientY + 'px';
+        ring.style.left = e.clientX + 'px'; ring.style.top = e.clientY + 'px';
+        glow.style.left = e.clientX + 'px'; glow.style.top = e.clientY + 'px';
     });
+
+    const attachMagnet = () => {
+        document.querySelectorAll('a, button, input, textarea, .nav-logo').forEach(el => {
+            if(!el.dataset.magnet) {
+                el.dataset.magnet = 'true';
+                el.addEventListener('mouseenter', () => document.body.classList.add('cursor-hover'));
+                el.addEventListener('mouseleave', () => document.body.classList.remove('cursor-hover'));
+            }
+        });
+    };
+    attachMagnet();
+    new MutationObserver(attachMagnet).observe(document.body, { childList: true, subtree: true });
 })();
 
 // ===================================================

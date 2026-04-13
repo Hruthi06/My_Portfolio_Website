@@ -3,45 +3,90 @@
     "id": 1,
     "title": "Data Analytics Job Simulation",
     "issuer": "Deloitte Australia",
-    "date": "2025",
+    "date": "Dec 2025",
     "url": "https://www.theforage.com/simulations/deloitte-australia/data-analytics",
     "badge": "📊",
-    "imageUrl": "assets/certificates/deloitte.png"
+    "imageUrl": "assets/certificates/Screenshot 2026-04-12 225947.png",
+    "description": "Completed practical tasks in data analysis and forensic technology through the Forage simulation program."
   },
   {
     "id": 2,
     "title": "Cloud Foundations",
     "issuer": "AWS Academy",
-    "date": "2025",
-    "url": "https://www.linkedin.com/in/hruthik-k-r-a32450294/details/certifications/",
+    "date": "Dec 2025",
+    "url": "https://www.linkedin.com/in/hruthik-k-r-a32450294/",
     "badge": "☁️",
-    "imageUrl": "assets/certificates/aws.png"
+    "imageUrl": "assets/certificates/Screenshot 2026-04-12 230024.png",
+    "description": "20-hour comprehensive training covering cloud concepts, security, architecture, and pricing."
   },
   {
     "id": 3,
-    "title": "Full Stack Dev with MERN",
+    "title": "Full Stack Development with MERN",
     "issuer": "Nasscom Foundation",
     "date": "2025",
-    "url": "https://www.linkedin.com/in/hruthik-k-r-a32450294/details/certifications/",
+    "url": "https://www.linkedin.com/in/hruthik-k-r-a32450294/",
     "badge": "🚀",
-    "imageUrl": "assets/certificates/nasscom.png"
+    "imageUrl": "assets/certificates/Screenshot 2026-04-12 230114.png",
+    "description": "Excellence certificate for mastering MongoDB, Express.js, React, and Node.js as part of the thingQbator program."
   },
   {
     "id": 4,
     "title": "Cloud Computing Fundamentals",
     "issuer": "IBM SkillsBuild",
-    "date": "2025",
+    "date": "Oct 2025",
     "url": "https://www.credly.com/badges/ba12dc12-d596-43b1-abf1-1a82a18d3d0c",
     "badge": "🌩️",
-    "imageUrl": "assets/certificates/ibm_fundamentals.png"
+    "imageUrl": "assets/certificates/Screenshot 2026-04-12 230149.png",
+    "description": "Validated foundational knowledge of cloud service models (IaaS, PaaS, SaaS) and deployment strategies."
   },
   {
     "id": 5,
     "title": "Introduction to Cloud",
     "issuer": "IBM SkillsBuild",
-    "date": "2025",
+    "date": "Oct 2025",
     "url": "https://courses.skillsbuild.skillsnetwork.site/certificates/79ecd839dac542e69d79b86937a85f0f",
     "badge": "☁️",
-    "imageUrl": "assets/certificates/ibm_intro.png"
+    "imageUrl": "assets/certificates/Screenshot 2026-04-12 230217.png",
+    "description": "Comprehensive overview of cloud infrastructure and IBM Developer Skills Network components."
+  },
+  {
+    "id": 6,
+    "title": "Artificial Intelligence Fundamentals",
+    "issuer": "IBM SkillsBuild",
+    "date": "Oct 2025",
+    "url": "https://www.credly.com/badges/c108be90-1611-4a72-9f1c-a3b55fcdec4a",
+    "badge": "🤖",
+    "imageUrl": "assets/certificates/Screenshot 2026-04-12 230246.png",
+    "description": "Mastery of AI core concepts, machine learning workflows, and neural network foundations."
+  },
+  {
+    "id": 7,
+    "title": "Introduction to Generative AI Studio",
+    "issuer": "Google Cloud",
+    "date": "Nov 2025",
+    "url": "https://www.linkedin.com/in/hruthik-k-r-a32450294/",
+    "badge": "✨",
+    "imageUrl": "assets/certificates/Screenshot 2026-04-12 230318.png",
+    "description": "Hands-on certification in using Generative AI Studio to create and deploy large language models."
+  },
+  {
+    "id": 8,
+    "title": "GenAI Powered Data Analytics",
+    "issuer": "TATA / Forage",
+    "date": "Oct 2025",
+    "url": "https://www.theforage.com/simulations/tata/data-analytics-simulation",
+    "badge": "📈",
+    "imageUrl": "assets/certificates/Screenshot 2026-04-12 230413.png",
+    "description": "Job simulation focused on AI-driven data storytelling, predictive analytics, and risk profiling."
+  },
+  {
+    "id": 9,
+    "title": "Introduction to Cybersecurity",
+    "issuer": "Cisco",
+    "date": "Sep 2025",
+    "url": "https://www.linkedin.com/in/hruthik-k-r-a32450294/",
+    "badge": "🛡️",
+    "imageUrl": "assets/certificates/Screenshot 2026-04-12 230447.png",
+    "description": "Validated expertise in network protection, data privacy, and identifying cybersecurity threats."
   }
 ]

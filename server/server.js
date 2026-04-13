@@ -13,10 +13,12 @@ app.use(express.json());
 const projectRoutes = require('./routes/projects');
 const skillRoutes = require('./routes/skills');
 const certificateRoutes = require('./routes/certificates');
+const experienceRoutes = require('./routes/experience');
 
 app.use('/api/projects', projectRoutes);
 app.use('/api/skills', skillRoutes);
 app.use('/api/certificates', certificateRoutes);
+app.use('/api/experience', experienceRoutes);
 
 // Static files for frontend
 app.use(express.static(path.join(__dirname, '../client')));
